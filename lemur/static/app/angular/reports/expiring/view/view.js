@@ -85,6 +85,7 @@ angular.module('lemur')
              CertificateApi.getList(url)
                .then(function (data) {
                  params.total(data.total);
+                 $scope.data = data;
                  $defer.resolve(data);
                });
            }
@@ -97,4 +98,15 @@ angular.module('lemur')
        $scope.showFilters = !$scope.showFilters;
      };
      $scope.filterData(30);
+     $scope.getData = function (){
+       return $scope.data.map(entry => {
+         const csvData = {};
+         $scope.filters
+           .filter(filter=>filter.show)
+           .forEach((item) => {
+             csvData[item.field] = entry[item.field];
+           });
+         return csvData;
+       });
+     };
    });
