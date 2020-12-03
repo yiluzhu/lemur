@@ -16,6 +16,7 @@ from flask_principal import Identity, identity_changed
 
 from lemur.constants import SUCCESS_METRIC_STATUS, FAILURE_METRIC_STATUS
 from lemur.extensions import metrics
+from lemur.extra_log import extra_logger
 from lemur.common.utils import get_psuedo_random_string
 
 from lemur.users import service as user_service
@@ -305,6 +306,7 @@ class Login(Resource):
             metrics.send(
                 "login", "counter", 1, metric_tags={"status": SUCCESS_METRIC_STATUS}
             )
+            extra_logger.info(f'User {user} logged in.')
             return dict(token=create_token(user))
 
         # try ldap login
@@ -323,6 +325,7 @@ class Login(Resource):
                         1,
                         metric_tags={"status": SUCCESS_METRIC_STATUS},
                     )
+                    extra_logger.info(f'User {user} logged in.')
                     return dict(token=create_token(user))
             except Exception as e:
                 current_app.logger.error("ldap error: {0}".format(e))

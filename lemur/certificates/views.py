@@ -16,6 +16,7 @@ from lemur.common.utils import paginated_parser
 
 from lemur.auth.service import AuthenticatedResource
 from lemur.auth.permissions import AuthorityPermission, CertificatePermission
+from lemur.extra_log import extra_logger
 
 from lemur.certificates import service
 from lemur.certificates.models import Certificate
@@ -485,6 +486,8 @@ class CertificatesList(AuthenticatedResource):
             if isinstance(cert, Certificate):
                 # only log if created, not pending
                 log_service.create(g.user, "create_cert", certificate=cert)
+                extra_logger.info(f'Certificate {cert} is created by user {g.user}.')
+
             return cert
 
         return (
@@ -1465,6 +1468,7 @@ class CertificateRevoke(AuthenticatedResource):
         plugin.revoke_certificate(cert, data)
 
         log_service.create(g.current_user, "revoke_cert", certificate=cert)
+        extra_logger.info(f'Certificate {cert} is revoked by user {g.current_user}')
 
         # Perform cleanup after revoke
         error_message = service.cleanup_after_revoke(cert)
