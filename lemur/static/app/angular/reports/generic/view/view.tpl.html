@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-2" ng-repeat="entry in data.labels | limitTo:6 track by $index">
+      <div class="col-md-3" ng-repeat="entry in data.labels | limitTo:6 track by $index">
         <div class="panel {{classes[$index]}}">
           <div class="panel-heading">
             <h3 class="panel-title ellipsis" title="{{ entry }}">{{entry}}</h3>
