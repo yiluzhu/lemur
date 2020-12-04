@@ -417,18 +417,17 @@ angular.module('lemur')
     $uibModalInstance.dismiss('cancel');
   };
 
-  $scope.revoke = function (certificates) {
+          body: 'Successfully revoked!'
     certificates.forEach(certificate => {
-     CertificateService.revoke(certificate).then(
-        function () {
-          toaster.pop({
-            type: 'success',
-            title: certificate.name,
-            body: 'Successfully revoked!'
-          });
-          $uibModalInstance.close();
-        },
-        function (response) {
+     CertificateService.revoke(certificates, crlReason).then(
+      function () {
+        toaster.pop({
+          type: 'success',
+          title: certificate.name,
+          body: 'Successfully revoked!'
+        });
+       },
+       function (response) {
           toaster.pop({
             type: 'error',
             title: certificate.name,
@@ -436,7 +435,6 @@ angular.module('lemur')
             bodyOutputType: 'directive',
             directiveData: response.data,
             timeout: 100000
-          });
         });
     });
   };

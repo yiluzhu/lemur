@@ -855,6 +855,14 @@ def remove_from_destination(certificate, destination):
         plugin.clean(certificate=certificate, options=destination.options)
 
 
+def revoke(certificate, reason):
+    plugin = plugins.get(certificate.authority.plugin_name)
+    plugin.revoke_certificate(certificate, reason)
+
+    # Perform cleanup after revoke
+    return cleanup_after_revoke(certificate)
+
+
 def cleanup_after_revoke(certificate):
     """
     Perform the needed cleanup for a revoked certificate. This includes -
@@ -883,3 +891,12 @@ def cleanup_after_revoke(certificate):
 
     database.update(certificate)
     return error_message
+
+
+def get_issued_cert_count_for_authority(authority):
+    """
+    Returns the count of certs issued by the specified authority.
+
+    :return:
+    """
+    return database.db.session.query(Certificate).filter(Certificate.authority_id == authority.id).count()
