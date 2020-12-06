@@ -343,7 +343,7 @@ def fetch_ejbca_cert(id):
     return log_data
 
 
-@celery.task(soft_time_limit=600)
+@celery.task()
 def update_cert_authority_id():
     """Update authority_id field for all certificates.
 
