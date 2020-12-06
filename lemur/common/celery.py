@@ -10,16 +10,20 @@ command: celery -A lemur.common.celery worker --loglevel=info -l DEBUG -B
 import copy
 import sys
 import time
+import json
 from celery import Celery
 from celery.app.task import Context
 from celery.exceptions import SoftTimeLimitExceeded
 from celery.signals import task_failure, task_received, task_revoked, task_success
+from cryptography.x509.extensions import AuthorityKeyIdentifier, SubjectKeyIdentifier, ExtensionNotFound
 from datetime import datetime, timezone, timedelta
 from flask import current_app
 
-from lemur.authorities.service import get as get_authority
+from lemur import database
+from lemur.authorities.service import get as get_authority, get_all as get_all_authorities
 from lemur.certificates import cli as cli_certificate
 from lemur.common.redis import RedisHandler
+from lemur.common.utils import parse_certificate
 from lemur.destinations import service as destinations_service
 from lemur.dns_providers import cli as cli_dns_providers
 from lemur.endpoints import cli as cli_endpoints
@@ -28,6 +32,7 @@ from lemur.factory import create_app
 from lemur.notifications import cli as cli_notification
 from lemur.notifications.messaging import send_pending_failure_notification
 from lemur.pending_certificates import service as pending_certificate_service
+from lemur.certificates import service as certificate_service
 from lemur.plugins.base import plugins
 from lemur.sources.cli import clean, sync, validate_sources
 from lemur.sources.service import add_aws_destination_to_sources
@@ -335,6 +340,54 @@ def fetch_ejbca_cert(id):
             new=new, failed=failed, wrong_issuer=wrong_issuer
         )
     )
+    return log_data
+
+
+@celery.task()
+def update_cert_authority_id():
+    """Update authority_id field for all certificates.
+
+    Get all subject key identifier in all authorities, compare them with authority key identifier in all certificates.
+    If they match, set authority id in the certificate to be the id of that authority.
+    """
+    task_id = None
+    if celery.current_task:
+        task_id = celery.current_task.request.id
+
+    function = f"{__name__}.{sys._getframe().f_code.co_name}"
+    log_data = {
+        "function": function,
+        "message": "Update authority id for all certificates",
+        "task_id": task_id,
+    }
+
+    current_app.logger.debug(log_data)
+
+    if task_id and is_task_active(function, task_id, None):
+        log_data["message"] = "Skipping update_cert_authority_id task: Task is already active"
+        current_app.logger.debug(log_data)
+        return
+
+    authorities = get_all_authorities()
+    authority_id_to_subject_key_id_dict = {}
+    for auth_model in authorities:
+        options = json.loads(auth_model.options)
+        auth_cert = parse_certificate(options[3]['value'])
+        ski_class = auth_cert.extensions.get_extension_for_class(SubjectKeyIdentifier)
+        ski = ski_class.value.digest
+        authority_id_to_subject_key_id_dict[ski] = auth_model.id
+
+    certs = certificate_service.get_all_certs()
+    for cert_model in certs:
+        cert = parse_certificate(cert_model.body)
+        try:
+            aki_class = cert.extensions.get_extension_for_class(AuthorityKeyIdentifier)
+        except ExtensionNotFound:
+            # Root certificate
+            continue
+        aki = aki_class.value.key_identifier
+        cert_model.authority_id = authority_id_to_subject_key_id_dict.get(aki)
+        database.update(cert_model)
     return log_data
 
 
