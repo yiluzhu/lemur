@@ -18,7 +18,8 @@
       'angular-clipboard',
       'ngFileSaver',
       'ngSanitize',
-      'ui.select'
+      'ui.select',
+      'ngCsv'
     ]);
 
 
@@ -26,7 +27,7 @@
     var initInjector = angular.injector(['ng']);
     var $http = initInjector.get('$http');
 
-    return $http.get('http://localhost:8000/api/1/auth/providers').then(function(response) {
+    return $http.get('http://localhost:3000/api/1/auth/providers').then(function(response) {
       lemur.constant('providers', response.data);
     }, function(errorResponse) {
       console.log('Could not fetch SSO providers' + errorResponse);
@@ -129,7 +130,7 @@
 
   lemur.factory('LemurRestangular', function (Restangular, $location, $auth) {
     return Restangular.withConfig(function (RestangularConfigurer) {
-      RestangularConfigurer.setBaseUrl('http://localhost:8000/api/1');
+      RestangularConfigurer.setBaseUrl('http://localhost:3000/api/1');
       RestangularConfigurer.setDefaultHttpFields({withCredentials: true});
 
       // handle situation where our token has become invalid.
@@ -197,5 +198,3 @@
     });
   });
 }());
-
-
