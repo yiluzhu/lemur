@@ -10,8 +10,23 @@ angular.module('lemur')
         templateUrl: '/angular/certificates/view/view.tpl.html',
         controller: 'CertificatesViewController'
       })
-      .state('certificate', {
-        url: '/certificates/:fixedName', // use "fixedName" if in URL to indicate 'like' query can be avoided
+      .state('issuerCertificate', {
+        url: '/certificates/issuer/:issuer',
+        templateUrl: '/angular/certificates/view/view.tpl.html',
+        controller: 'CertificatesViewController'
+      })
+      .state('bitsCertificate', {
+        url: '/certificates/bits/:bits',
+        templateUrl: '/angular/certificates/view/view.tpl.html',
+        controller: 'CertificatesViewController'
+      })
+      .state('destinationCertificate', {
+        url: '/certificates/destination/:destination',
+        templateUrl: '/angular/certificates/view/view.tpl.html',
+        controller: 'CertificatesViewController'
+      })
+      .state('signingAlgorithmCertificate', {
+        url: '/certificates/signingAlgorithm/:signingAlgorithm',
         templateUrl: '/angular/certificates/view/view.tpl.html',
         controller: 'CertificatesViewController'
       });

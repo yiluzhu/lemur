@@ -495,6 +495,9 @@ def render(args):
             # only what matches the fixed name directly if a fixedname is provided
             query = query.filter(Certificate.name == terms[1])
 
+        elif "bits" in terms:
+            query = query.filter(Certificate.bits == terms[1])
+
         elif "notBeforeRange" in terms:
             dateRange = terms[1].split("to")
             if not "*" in dateRange[0]:
