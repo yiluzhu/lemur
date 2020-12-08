@@ -10,8 +10,9 @@ angular.module('lemur')
     });
   })
 
-   .controller('ExpiringReportsViewController', function ($scope, LemurRestangular, ngTableParams, CertificateApi, MomentService) {
+   .controller('ExpiringReportsViewController', function ($q, $scope, LemurRestangular, ngTableParams, CertificateApi, MomentService) {
      $scope.showFilters = false;
+     $scope.params = {};
      $scope.momentService = MomentService;
      $scope.daysFilters = [
        {count: 1, label:'In 1 Day'},
@@ -80,9 +81,9 @@ angular.module('lemur')
          }, {
            total: 0,           // length of data
            getData: function ($defer, params) {
-             const url = params.url();
-             url['filter[notAfterRange]'] = notAfterRange;
-             CertificateApi.getList(url)
+             $scope.params = params.url();
+             $scope.params['filter[notAfterRange]'] = notAfterRange;
+             CertificateApi.getList($scope.params)
                .then(function (data) {
                  params.total(data.total);
                  $scope.data = data;
@@ -98,15 +99,21 @@ angular.module('lemur')
        $scope.showFilters = !$scope.showFilters;
      };
      $scope.filterData(30);
-     $scope.getData = function (){
-       return $scope.data.map(entry => {
-         const csvData = {};
-         $scope.filters
-           .filter(filter=>filter.show)
-           .forEach((item) => {
-             csvData[item.field] = entry[item.field];
-           });
-         return csvData;
-       });
+     $scope.getData = function () {
+       var deferred = $q.defer();
+       $scope.params.count = 9999999;
+       CertificateApi.getList($scope.params)
+         .then(function (data) {
+           deferred.resolve(data.map(entry => {
+             const csvData = {};
+             $scope.filters
+               .filter(filter=>filter.show)
+               .forEach((item) => {
+                 csvData[item.field] = entry[item.field];
+               });
+             return csvData;
+           }));
+         });
+       return deferred.promise;
      };
    });

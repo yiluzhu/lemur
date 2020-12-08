@@ -10,7 +10,8 @@ angular.module('lemur')
     });
   })
 
-   .controller('IssuedReportsViewController', function ($scope, LemurRestangular, ngTableParams, CertificateApi, MomentService) {
+   .controller('IssuedReportsViewController', function ($q, $scope, LemurRestangular, ngTableParams, CertificateApi, MomentService) {
+     $scope.params = {};
      $scope.showFilters = false;
      $scope.momentService=MomentService;
      $scope.daysFilters = [
@@ -81,9 +82,9 @@ angular.module('lemur')
          }, {
            total: 0,           // length of data
            getData: function ($defer, params) {
-             const url = params.url();
-             url['filter[notBeforeRange]'] = notBeforeRange;
-             CertificateApi.getList(url)
+             $scope.params = params.url();
+             $scope.params['filter[notBeforeRange]'] = notBeforeRange;
+             CertificateApi.getList($scope.params)
                .then(function (data) {
                  params.total(data.total);
                  $scope.data = data;
@@ -99,15 +100,21 @@ angular.module('lemur')
        $scope.showFilters = !$scope.showFilters;
      };
      $scope.filterData(30);
-     $scope.getData = function (){
-       return $scope.data.map(entry => {
-         const csvData = {};
-         $scope.filters
-           .filter(filter=>filter.show)
-           .forEach((item) => {
-             csvData[item.field] = entry[item.field];
-           });
-         return csvData;
-       });
+     $scope.getData = function () {
+       var deferred = $q.defer();
+       $scope.params.count = 9999999;
+       CertificateApi.getList($scope.params)
+         .then(function (data) {
+           deferred.resolve(data.map(entry => {
+             const csvData = {};
+             $scope.filters
+               .filter(filter=>filter.show)
+               .forEach((item) => {
+                 csvData[item.field] = entry[item.field];
+               });
+             return csvData;
+           }));
+         });
+       return deferred.promise;
      };
    });

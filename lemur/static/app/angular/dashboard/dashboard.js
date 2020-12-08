@@ -9,18 +9,18 @@ angular.module('lemur')
     });
   })
   .controller('DashboardController', function ($scope, $rootScope, $filter, $location, LemurRestangular) {
-    $scope.issuerGraphClick = function (chartElement, event) {
+    $scope.issuerGraphClick = function (chartElement) {
       $location.path('certificates/issuer/' + chartElement[0].label);
-    }
-    $scope.signingAlgorithmGraphClick = function (chartElement, event) {
+    };
+    $scope.signingAlgorithmGraphClick = function (chartElement) {
       $location.path('certificates/signingAlgorithm/' + chartElement[0].label);
-    }
-    $scope.bitsGraphClick = function (chartElement, event) {
+    };
+    $scope.bitsGraphClick = function (chartElement) {
       $location.path('certificates/bits/' + chartElement[0].label);
-    }
-    $scope.destinationGraphClick = function (chartElement, event) {
+    };
+    $scope.destinationGraphClick = function (chartElement) {
       $location.path('certificates/destination/' + chartElement[0].label);
-    }
+    };
     $scope.colors = [
       {
         fillColor: 'rgba(41, 171, 224, 0.2)',
