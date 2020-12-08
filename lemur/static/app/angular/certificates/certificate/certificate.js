@@ -417,8 +417,9 @@ angular.module('lemur')
     $uibModalInstance.dismiss('cancel');
   };
 
+  $scope.revoke = function (certificate, crlReason) {
     certificates.forEach(certificate => {
-     CertificateService.revoke(certificates).then(
+     CertificateService.revoke(certificate, crlReason).then(
       function () {
         toaster.pop({
           type: 'success',
@@ -437,6 +438,7 @@ angular.module('lemur')
         });
     });
   });
+  }
 })
 .controller('CertificateInfoController', function ($scope, CertificateApi) {
   $scope.fetchFullCertificate = function (certId) {
