@@ -532,7 +532,7 @@ class EJBCAIssuerPlugin(IssuerPlugin):
         base_url = current_app.config.get("EJBCA_URL")
 
         authority = get_authority(certificate.authority_id)
-        authority_const = authority.name.upper()
+        authority_const = authority.name.upper().replace('-', '_')
 
         cert_body = certificate.body
 
@@ -554,7 +554,8 @@ class EJBCAIssuerPlugin(IssuerPlugin):
 
         session = requests.Session()
         session.mount('https://', HttpsAdapter())
-        session.cert = current_app.config.get("EJBCA_PEM_PATH_{0}".format(authority_const))
+        session.cert = current_app.config.get(f'EJBCA_PEM_PATH_{authority_const}')
+
         session.verify = current_app.config.get("EJBCA_TRUSTSTORE")
         session.hooks = dict(response=log_status_code)
 
@@ -686,3 +687,4 @@ class EJBCASourcePlugin(SourcePlugin):
             certs.append(cert)
 
         return certs
+
