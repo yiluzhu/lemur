@@ -17,7 +17,7 @@ from cryptography.hazmat.backends import default_backend
 from OpenSSL.crypto import load_certificate_request, load_certificate, dump_certificate_request, FILETYPE_PEM
 from lemur.authorities.service import get as get_authority
 
-from lemur.common.utils import get_psuedo_random_string
+from lemur.extra_log import extra_logger
 from lemur.extensions import metrics, sentry
 from lemur.plugins import lemur_ejbca as ejbca 
 from lemur.plugins.bases import IssuerPlugin, SourcePlugin
@@ -248,17 +248,17 @@ class EJBCAIssuerPlugin(IssuerPlugin):
             try:
                 response = client.service.pkcs10Request(**request_data)
 
-                print(response)
-                print(response.data)
+                # print(response)
+                # print(response.data)
 
                 cert_data_str = response.data.decode("utf-8")
 
-                print("CERT DATA")
-                print(cert_data_str)
+                # print("CERT DATA")
+                # print(cert_data_str)
                 #cert_data = base64.b64decode(cert_data_str).decode("utf-8")
                 cert_data_str.replace('\\n', '\n')
-                print("decoded:")
-                print(cert_data_str)
+                # print("decoded:")
+                # print(cert_data_str)
                 
                 # External ID required for revocation
                 # Generate a random ID
@@ -279,11 +279,11 @@ class EJBCAIssuerPlugin(IssuerPlugin):
 
         except zeep.exceptions.Fault as fault:
             parsed_fault_detail = client.wsdl.types.deserialize(fault.detail[0])
-            print(len(fault.detail))
-            print(parsed_fault_detail)
+            # print(len(fault.detail))
+            # print(parsed_fault_detail)
             
             if hasattr(parsed_fault_detail, 'requestId'):
-                print("has details:" + str(parsed_fault_detail.requestId))
+                # print("has details:" + str(parsed_fault_detail.requestId))
                 request_id = parsed_fault_detail.requestId
                 return None, None, request_id
 
@@ -296,7 +296,6 @@ class EJBCAIssuerPlugin(IssuerPlugin):
         rejected = False
         expired = False
         try:
-
             authority_const = issuer_options.get("authority").name.upper()
 
             session = requests.Session()
@@ -350,12 +349,12 @@ class EJBCAIssuerPlugin(IssuerPlugin):
 
                     cert_data_str = response.data.decode("utf-8")
 
-                    print("CERT DATA")
-                    print(cert_data_str)
+                    # print("CERT DATA")
+                    # print(cert_data_str)
                     #cert_data = base64.b64decode(cert_data_str).decode("utf-8")
                     cert_data_str.replace('\\n', '\n')
-                    print("decoded:")
-                    print(cert_data_str)
+                    # print("decoded:")
+                    # print(cert_data_str)
                     external_id = None
                     #reconstruct certificate from json array
                     pem = "-----BEGIN CERTIFICATE-----\n"
@@ -409,7 +408,7 @@ class EJBCAIssuerPlugin(IssuerPlugin):
                 authority = get_authority(pending_cert.authority_id)
                 authority_name = authority.name.upper()
                 
-                print("AUTHORITYNAME**** " + authority_name)
+                # print("AUTHORITYNAME**** " + authority_name)
 
                 session = requests.Session()
                 session.mount('https://', HttpsAdapter())
@@ -424,8 +423,7 @@ class EJBCAIssuerPlugin(IssuerPlugin):
                 csr_x509 = load_certificate_request(FILETYPE_PEM, pending_cert.csr)
                 # get SubjectDN string from CSR
                 subject_dn = get_subject_dn_string(csr_x509.get_subject().get_components())
-                print("*****DN:" + subject_dn)
-
+                # print("*****DN:" + subject_dn)
 
                 end_entity_username = pending_cert.name
                 if end_entity_username is None:
@@ -442,7 +440,7 @@ class EJBCAIssuerPlugin(IssuerPlugin):
                 )
 
                 if num_remaining == -1:
-                    print("Rejected!")
+                    # print("Rejected!")
                     rejected = True
                     certs.append(
                         {"cert": False, "pending_cert": pending_cert, "last_error": "Request was rejected", "rejected" : rejected, "expired" : expired}
@@ -451,7 +449,7 @@ class EJBCAIssuerPlugin(IssuerPlugin):
                     current_app.logger.debug(
                         f"Remaining Approvals: {num_remaining}"
                     )
-                    print("Approvals Remaining")
+                    # print("Approvals Remaining")
                     remain_message = "Remaining approvals: " + str(num_remaining)
                     certs.append(
                         {"cert": False, "pending_cert": pending_cert, "last_error": remain_message, "rejected" : rejected, "expired" : expired}
@@ -472,17 +470,17 @@ class EJBCAIssuerPlugin(IssuerPlugin):
                     try:
                         response = client.service.pkcs10Request(**request_data)
 
-                        print(response)
-                        print(response.data)
+                        # print(response)
+                        # print(response.data)
 
                         cert_data_str = response.data.decode("utf-8")
 
-                        print("CERT DATA")
-                        print(cert_data_str)
+                        # print("CERT DATA")
+                        # print(cert_data_str)
                         #cert_data = base64.b64decode(cert_data_str).decode("utf-8")
                         cert_data_str.replace('\\n', '\n')
-                        print("decoded:")
-                        print(cert_data_str)
+                        # print("decoded:")
+                        # print(cert_data_str)
                         external_id = None
                         #reconstruct certificate from json array
                         pem = "-----BEGIN CERTIFICATE-----\n"
@@ -550,8 +548,7 @@ class EJBCAIssuerPlugin(IssuerPlugin):
             base_url, issuer_dn, cert_serial_hex
         )
         
-        print(create_url)
-
+        # print(create_url)
         session = requests.Session()
         session.mount('https://', HttpsAdapter())
         session.cert = current_app.config.get(f'EJBCA_PEM_PATH_{authority_const}')
@@ -560,8 +557,10 @@ class EJBCAIssuerPlugin(IssuerPlugin):
         session.hooks = dict(response=log_status_code)
 
         metrics.send("ejbca_revoke_certificate", "counter", 1)
+        reason = comments.get('crl_reason')
         response = session.put(create_url, params={'reason': 'CERTIFICATE_HOLD'})
-        print(response)
+        # print(response)
+        extra_logger.info(f'{certificate} was revoked with reason {reason}')
         return handle_response(response)
 
     @staticmethod
