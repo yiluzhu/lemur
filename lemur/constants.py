@@ -3,6 +3,7 @@
     :copyright: (c) 2018 by Netflix Inc.
     :license: Apache, see LICENSE for more details.
 """
+import pathlib
 from enum import IntEnum
 
 SAN_NAMING_TEMPLATE = "SAN-{subject}-{issuer}-{not_before}-{not_after}"
@@ -11,6 +12,8 @@ NONSTANDARD_NAMING_TEMPLATE = "{issuer}-{not_before}-{not_after}"
 
 SUCCESS_METRIC_STATUS = "success"
 FAILURE_METRIC_STATUS = "failure"
+
+ROOT_DIR = pathlib.Path(__file__).parent.parent.absolute()
 
 CERTIFICATE_KEY_TYPES = [
     "RSA2048",
