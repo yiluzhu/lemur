@@ -557,8 +557,8 @@ class EJBCAIssuerPlugin(IssuerPlugin):
         session.hooks = dict(response=log_status_code)
 
         metrics.send("ejbca_revoke_certificate", "counter", 1)
-        reason = comments.get('crl_reason')
-        response = session.put(create_url, params={'reason': 'CERTIFICATE_HOLD'})
+        reason = comments.get('crl_reason', '')
+        response = session.put(create_url, params={'reason': reason})
         # print(response)
         extra_logger.info(f'{certificate} was revoked with reason {reason}')
         return handle_response(response)
