@@ -66,7 +66,7 @@
         <table ng-table="certificateTable" class="table" show-filter="showFilter" template-pagination="angular/pager.html">
           <tbody>
           <tr ng-class="{'even-row': $even,'bg-warning':markWarning(certificate.notAfter), 'bg-danger':markDanger(certificate.notAfter) }" ng-repeat-start="certificate in $data track by $index">
-            <td data-title="'Id'" filter="{'id': 'text'}">
+            <td data-title="'Id'" sortable="'id'" filter="{'id': 'text'}">
               <ng-container ng-if="!bulkActionEnabled">
                 {{ certificate.id }}
               </ng-container>
@@ -84,7 +84,7 @@
                 <li><span class="text-muted">{{ certificate.owner }}</span></li>
               </ul>
             </td>
-            <td data-title="'Notify'" filter="{ 'notify': 'select' }" filter-data="getCertificateStatus()">
+            <td data-title="'Notify'" sortable="'notify'" filter="{ 'notify': 'select' }" filter-data="getCertificateStatus()">
               <form>
                 <switch ng-change="updateNotify(certificate)" id="status" name="status"
                         ng-model="certificate.notify" class="green small"></switch>
@@ -93,7 +93,7 @@
             <td data-title="'Issuer'" sortable="'issuer'" filter="{ 'issuer': 'text' }">
               {{ certificate.authority.name || certificate.issuer }}
             </td>
-            <td data-title="'Common Name'" filter="{ 'cn': 'text'}">
+            <td data-title="'Common Name'" sortable="'cn'" filter="{ 'cn': 'text'}">
               {{ certificate.cn }}
             </td>
             <td data-title="'Not Before'" filter="{ 'Not Before From': 'date', 'Not Before To': 'date'}" sortable="'notBefore'" >
