@@ -101,6 +101,7 @@ angular.module('lemur')
      };
      $scope.filterData(30);
      $scope.getData = function () {
+       $scope.now = Date.now();
        var deferred = $q.defer();
        $scope.params.count = 9999999;
        CertificateApi.getList($scope.params)

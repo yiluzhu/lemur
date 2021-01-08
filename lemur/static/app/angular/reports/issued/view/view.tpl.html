@@ -10,7 +10,7 @@
             <button ng-click="showFilterOptions()" class="btn btn-primary">
               Update Fields
             </button>
-            <button ng-csv="getData()" filename="issued-report.csv" csv-label="true" class="btn btn-info">
+            <button ng-csv="getData()" filename="issued-report-{{now| date:'yyMMdd_HHmmss'}}.csv" csv-label="true" class="btn btn-info">
               Export
             </button>
           </div>
