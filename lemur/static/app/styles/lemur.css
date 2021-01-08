@@ -194,11 +194,20 @@ a {
     background-color: #fff;
 }
 .table thead tr th{vertical-align: text-top !important;}
+.radioBtn.border button.btn.btn-info.notActive:hover {
+    border: 1px solid #3276b1;
+    color: #3276b1;
+    background-color: #fff;
+}
+
 .radioBtn.border button.btn.btn-info.notActive {
-    border: none;
+    border: 1px solid #777;
+    color: #777;
+    background-color: #eee;
+    opacity: .65;
 }
 .radioBtn.border button.btn.btn-info {
-    background-color: white;
+    background-color: #fff;
     color: #3276b1;
     border: 1px solid #3276b1;
     margin-bottom: 8px;
