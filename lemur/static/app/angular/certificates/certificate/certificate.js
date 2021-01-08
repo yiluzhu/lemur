@@ -438,7 +438,7 @@ angular.module('lemur')
         });
     });
   });
-  }
+};
 })
 .controller('CertificateInfoController', function ($scope, CertificateApi) {
   $scope.fetchFullCertificate = function (certId) {
