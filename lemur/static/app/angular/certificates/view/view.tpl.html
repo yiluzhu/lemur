@@ -65,7 +65,7 @@
       <div class="table-responsive">
         <table ng-table="certificateTable" class="table" show-filter="showFilter" template-pagination="angular/pager.html">
           <tbody>
-          <tr ng-class="{'even-row': $even }" ng-repeat-start="certificate in $data track by $index">
+          <tr ng-class="{'even-row': $even,'bg-warning':markWarning(certificate.notAfter), 'bg-danger':markDanger(certificate.notAfter) }" ng-repeat-start="certificate in $data track by $index">
             <td data-title="'Id'" filter="{'id': 'text'}">
               <ng-container ng-if="!bulkActionEnabled">
                 {{ certificate.id }}

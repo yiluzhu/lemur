@@ -347,4 +347,13 @@ angular.module('lemur')
       }
       $scope.multiList = multiList;
     };
+    $scope.markWarning = function (date) {
+      var now = new Date() ;
+      now.setDate(now.getDate() + 7);
+      return !$scope.markDanger() && now >= Date.parse(date);
+    };
+    $scope.markDanger = function (date) {
+      var now = new Date() ;
+      return now >= Date.parse(date);
+    };
   });
