@@ -19,6 +19,7 @@ from lemur.authorities.service import get as get_authority
 
 from lemur.extra_log import extra_logger
 from lemur.extensions import metrics, sentry
+from lemur.exceptions import InvalidConfiguration
 from lemur.plugins import lemur_ejbca as ejbca 
 from lemur.plugins.bases import IssuerPlugin, SourcePlugin
 from lemur.plugins.lemur_ejbca.adapter import HttpsAdapter
@@ -296,7 +297,8 @@ class EJBCAIssuerPlugin(IssuerPlugin):
         rejected = False
         expired = False
         try:
-            authority_const = issuer_options.get("authority").name.upper()
+            authority = get_authority(pending_cert.authority_id)
+            authority_const = authority.name.upper().replace('-', '_')
 
             session = requests.Session()
             session.mount('https://', HttpsAdapter())
@@ -686,4 +688,3 @@ class EJBCASourcePlugin(SourcePlugin):
             certs.append(cert)
 
         return certs
-
