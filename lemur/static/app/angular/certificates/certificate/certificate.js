@@ -138,7 +138,6 @@ angular.module('lemur')
            timeout: 100000
          });
 
-         WizardHandler.wizard().context.loading = false;
        });
 
     };
