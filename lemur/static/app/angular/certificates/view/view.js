@@ -260,6 +260,25 @@ angular.module('lemur')
       });
     };
 
+    $scope.migrate = function (certificateId) {
+      var uibModalInstance = $uibModal.open({
+        animation: true,
+        controller: 'CertificateMigrateController',
+        templateUrl: '/angular/certificates/certificate/migrate.tpl.html',
+        size: 'lg',
+        backdrop: 'static',
+        resolve: {
+          editId: function () {
+            return certificateId;
+          }
+        }
+      });
+
+      uibModalInstance.result.then(function () {
+        $scope.certificateTable.reload();
+      });
+    };
+
     $scope.import = function () {
       var uibModalInstance = $uibModal.open({
         animation: true,
