@@ -35,6 +35,21 @@ endif
 	node_modules/.bin/gulp package --urlContextPath=$(urlContextPath)
 	@echo ""
 
+releasePfizer:
+	@echo "--> Installing dependencies"
+ifeq ($(USER), root)
+	@echo "WARNING: It looks like you are installing Lemur as root. This is not generally advised."
+	npm install --unsafe-perm
+else
+	npm install
+endif
+	pip install "setuptools>=0.9.8"
+	# order matters here, base package must install first
+	pip install -e .
+	node_modules/.bin/gulp build --customThemeName pfizer
+	node_modules/.bin/gulp package --urlContextPath=$(urlContextPath)
+	@echo ""
+
 dev-docs:
 	pip install -r requirements-docs.txt
 

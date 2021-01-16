@@ -36,7 +36,7 @@
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-    <div class="navbar navbar-fixed-top" role="navigation">
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -44,7 +44,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/#/"><img src="https://www.pfizer.com/sites/default/files/custom-logo/Logo_FullColor.png" alt="Pfizer" ></a>
+                <a class="navbar-brand" href="/#/">Lemur</a>
                 <ul class="nav navbar-collapse collapse navbar-nav navbar-left">
                     <li><a ui-sref="dashboard">Dashboard</a></li>
                     <li><a ui-sref="certificates">Certificates</a></li>
@@ -104,7 +104,11 @@
     </div>
     <footer class="footer">
       <div class="container">
-        <section id="block-pfizercopyrightblock" class="block block-pfizer-corporate-hf-export block-copyright-block clearfix">
+        <p class="text-muted pfizer-hide">
+            <span>Lemur is broken regularly by <a href="https://github.com/Netflix/lemur.git">Netflix</a>.</span>
+            <span class="pull-right">Confused? Check out our <a href="https://lemur.readthedocs.io/en/latest">docs</a>!</span>
+        </p>
+        <section id="block-pfizercopyrightblock" class="block block-pfizer-corporate-hf-export block-copyright-block clearfix pfizer-only">
           <div class="block-globalfootercopyright">
             <div class="text-with-summary">
               <div class="footer-logo">

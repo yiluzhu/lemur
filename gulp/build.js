@@ -86,6 +86,9 @@ gulp.task('dev:styles', function () {
     'lemur/static/app/styles/lemur.css'
   ];
 
+  if (argv.customThemeName && argv.customThemeName.length) {
+    fileList.push('lemur/static/app/styles/' + argv.customThemeName.toLowerCase() + '.css');
+  }
   return gulp.src(fileList)
     .pipe(gulpif(isBootswatchFile, foreach(function (stream, file) {
       let themeName = path.basename(path.dirname(file.path)),

@@ -1,0 +1,115 @@
+body {
+  padding-bottom: 90px;
+  padding-top: 85px;
+}
+
+.footer {
+  height: 90px;
+}
+.footer-logo {float: left;}
+.block-globalfootercopyright {margin-top: 20px;}
+.text-with-summary {margin: auto; width: 840px;}
+.nav.navbar-left>li>a:focus:after, .nav.navbar-left>li>a:hover:after {opacity: 1;}
+ul.navbar-nav.navbar-left{margin-top: 45px;}
+.navbar-fixed-top{background-color: white;}
+.btn-success {background-color: #f8971d;}
+.btn-success.focus, .btn-success:focus, .btn-success:hover {background-color: #e48a00;}
+a {color: #f8971d;}
+a:focus, a:hover {color: #e48a00;}
+.switch.checked {background: #f8971d;border-color: #e48a00;}
+.navbar-header{float: none;margin: auto !important;width: 1240px;}
+.abs{position: absolute;top: 5px;right: 5px;}
+.navbar-toggle {
+    position: absolute;
+    background-repeat: no-repeat;
+    padding: 6px 0px;
+    margin: 25px 15px 9px 0;
+    background-image: url(https://pfe-pfizercom-d8-prod.s3.amazonaws.com/2021-01/BlackNav.png);
+    border: none;
+    right: 0;
+    background-position: 0;
+}
+.panel-footer{background-color: #f0f0f0;border-top: 1px solid #e0e0e0;}
+.table-hover>tbody>tr:hover, .table-striped>tbody>tr:nth-of-type(odd), .table>tbody>tr.active>td, .table>tbody>tr.active>th, .table>tbody>tr>td.active,
+.table>tbody>tr>th.active, .table>tfoot>tr.active>td, .table>tfoot>tr.active>th, .table>tfoot>tr>td.active, .table>tfoot>tr>th.active, .table>thead>tr.active>td,
+.table>thead>tr.active>th, .table>thead>tr>td.active, .table>thead>tr>th.active{background-color: #f0f0f0;}
+.panel-default>.panel-heading{background-color: #f0f0f0;border-color: #e0e0e0;}
+.panel-default{border-color: #e0e0e0}
+.jumbotron, .thumbnail {background-color: #f0f0f0;}
+.nav>li>a:focus, .nav>li>a:hover {background-color: #f0f0f0;}
+.nav .open>a, .nav .open>a:focus, .nav .open>a:hover{background-color: #f0f0f0;}
+.nav .open>a, .nav .open>a:focus, .nav .open>a:hover, .nav-tabs>li>a{background-color: #f0f0f0;}
+.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover{background-color: #f0f0f0;color: #e48a00;}
+@media (max-width: 768px) {
+  .navbar-brand{height: 40px;padding: 20px 15px; margin-top: 6px !important;}
+  .navbar-brand img{height: 28px;}
+  .navbar-collapse li{border-bottom: 1px solid #ddd;}
+  .abs {top: -8px;right: 60px;}
+  .nav>li:focus, .nav>li:hover {background-color: #f0f0f0;}
+}
+.navbar-nav>li>a {
+    font-family: open-sans,sans-serif;
+    list-style: none;
+    box-sizing: border-box;
+    text-size-adjust: none;
+    overflow-wrap: break-word;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    padding: 0 22px;
+    font-weight: 700 !important;
+    line-height: 40px !important;
+    font-size: 16px !important;
+    text-transform: none!important;
+    color: #333!important;
+}
+.nav.navbar-left>li>a:after{
+  background: #f26649;
+    display: block;
+    content: "";
+    opacity: 0;
+    position: absolute;
+    bottom: 8px;
+    left: 25px;
+    right: 25px;
+    height: 3px;
+    width: auto;
+    transition: .5s;
+}
+.text-with-summary .copyright-text p {
+    font-size: 10px;
+    line-height: 14px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    color: #5b5b5b;
+}
+.copyright-text {
+    float: left;
+    padding: 10px;
+    margin-left: 25px;
+}
+.pfizer-only{display:block !important}
+.pfizer-hide{display:none !important}
+.navbar-brand{
+  background-image: url('https://www.pfizer.com/sites/default/files/custom-logo/Logo_FullColor.png');
+    width: 133px;
+    height: 51px;
+    background-repeat: no-repeat;
+    color: transparent !important;
+    margin-top: 15px;
+}
+
+.navbar-fixed-top {
+    border-color: #e0e0e0;
+}
+.navbar-inverse .navbar-nav>.open>a:hover, .navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>li>a:hover{
+background: #f0f0f0 !important;
+}
+.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle .icon-bar {
+    background-color: transparent !important;
+}
+@media (max-width: 767px){
+.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {color: #98978B !important;}
+.navbar-inverse .navbar-nav .open .dropdown-menu>li>a:focus, .navbar-inverse .navbar-nav .open .dropdown-menu>li>a:hover{color: #e48a00 !important;}
+body {padding-top: 60px;}
+}
