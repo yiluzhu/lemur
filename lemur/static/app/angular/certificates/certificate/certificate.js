@@ -84,6 +84,69 @@ angular.module('lemur')
     $scope.destinationService = DestinationService;
     $scope.notificationService = NotificationService;
   })
+  .controller('CertificateMigrateController', function ($scope, $uibModalInstance, CertificateApi, CertificateService, DestinationService, NotificationService, LemurRestangular, AuthorityService, toaster, editId) {
+    $scope.certificate = LemurRestangular.restangularizeElement(null, {}, 'certificates');
+
+    $scope.cancel = function () {
+      $uibModalInstance.dismiss('cancel');
+    };
+
+    $scope.getAuthoritiesByName = function (value) {
+      return AuthorityService.findAuthorityByName(value).then(function (authorities) {
+        $scope.authorities = authorities;
+      });
+    };
+
+    CertificateApi.get(editId).then(function (certificate) {
+      $scope.certificate = certificate;
+      CertificateService.getDefaults($scope.certificate);
+    });
+
+    $scope.migrate = function (certificate, crlReason) {
+      var certificateId = certificate.id;
+      delete certificate.id;
+      CertificateService.create(certificate).then(
+       function () {
+         certificate.id = certificateId;
+         CertificateService.revoke(certificate, crlReason).then(
+          function () {
+            toaster.pop({
+              type: 'success',
+              title: certificate.name,
+              body: 'Successfully migrated!'
+            });
+            $uibModalInstance.close();
+          },
+           function (response) {
+              toaster.pop({
+                type: 'error',
+                title: certificate.name,
+                body: 'lemur-bad-request',
+                bodyOutputType: 'directive',
+                directiveData: response.data,
+                timeout: 100000
+            });
+        });
+       },
+       function (response) {
+         toaster.pop({
+           type: 'error',
+           title: certificate.name,
+           body: 'lemur-bad-request',
+           bodyOutputType: 'directive',
+           directiveData: response.data,
+           timeout: 100000
+         });
+
+         WizardHandler.wizard().context.loading = false;
+       });
+
+    };
+
+    $scope.certificateService = CertificateService;
+    $scope.destinationService = DestinationService;
+    $scope.notificationService = NotificationService;
+  })
 
   .controller('CertificateCreateController', function ($scope, $uibModalInstance, CertificateApi, CertificateService, DestinationService, AuthorityService, AuthorityApi, PluginService, MomentService, WizardHandler, LemurRestangular, NotificationService, toaster) {
     $scope.certificate = LemurRestangular.restangularizeElement(null, {}, 'certificates');

@@ -1,0 +1,56 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()" aria-label="Close"><span aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">Migrate <span class="text-muted"><small>{{ certificate.name }}</small></span></h3>
+</div>
+<div class="modal-body">
+  <form name="editForm" class="form-horizontal" role="form" novalidate>
+    <div class="form-group"
+         ng-class="{'has-error': trackingForm.selectedAuthority.$invalid, 'has-success': !trackingForm.$invalid&&trackingForm.selectedAuthority.$dirty}">
+      <label class="control-label col-sm-2">
+        Certificate Authority
+      </label>
+      <div class="col-sm-10">
+        <ui-select class="input-md" ng-model="certificate.authority" theme="bootstrap" title="choose an authority" ng-change="clearDates()">
+          <ui-select-match placeholder="select an authority...">{{$select.selected.name}}</ui-select-match>
+          <ui-select-choices class="form-control" repeat="authority in authorities"
+                             refresh="getAuthoritiesByName($select.search)"
+                             refresh-delay="300">
+            <div ng-bind-html="authority.name | highlight: $select.search"></div>
+            <small>
+              <span ng-bind-html="''+authority.description | highlight: $select.search"></span>
+            </small>
+          </ui-select-choices>
+        </ui-select>
+      </div>
+    </div>
+    <div class="row"></div>
+    <div class="m-t-20 row form-horizontal">
+      <label class="control-label col-sm-2">
+        Migration Reason
+      </label>
+      <div class="col-sm-10">
+        <select class="form-control" ng-model="crlReason"
+                ng-options="option.value as option.name for option in [
+                    {'name': 'Unspecified', 'value': 'unspecified'},
+                    {'name': 'Key Compromise', 'value': 'keyCompromise'},
+                    {'name': 'CA Compromise', 'value': 'cACompromise'},
+                    {'name': 'Affiliation Changed', 'value': 'affiliationChanged'},
+                    {'name': 'Superseded', 'value': 'superseded'},
+                    {'name': 'Cessation of Operation', 'value': 'cessationOfOperation'},
+                    {'name': 'Certificate Hold', 'value': 'certificateHold'},
+                    {'name': 'Remove from CRL', 'value': 'removeFromCRL'},
+                    {'name': 'Privilege Withdrawn', 'value': 'privilegeWithdrawn'},
+                    {'name': 'Attribute Authority Compromise', 'value': 'aACompromise'}]"
+
+                ng-init="crlReason = 'unspecified'"></select>
+      </div>
+    </div>
+    <div class="row"></div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="submit" ng-click="migrate(certificate, crlReason)" ng-disabled="editForm.$invalid" class="btn btn-success">Save
+  </button>
+  <button ng-click="cancel()" class="btn btn-danger">Cancel</button>
+</div>
