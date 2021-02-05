@@ -21,7 +21,6 @@ from lemur.common.utils import get_psuedo_random_string
 
 from lemur.users import service as user_service
 from lemur.roles import service as role_service
-from lemur.logs import service as log_service
 from lemur.auth.service import create_token, fetch_token_header, get_rsa_public_key
 from lemur.auth import ldap
 
@@ -200,6 +199,7 @@ def update_user(user, profile, roles):
     :param profile:
     :param roles:
     """
+
     # if we get an sso user create them an account
     if not user:
         user = user_service.create(
@@ -213,16 +213,10 @@ def update_user(user, profile, roles):
 
     else:
         # we add 'lemur' specific roles, so they do not get marked as removed
-        removed_roles = []
         for ur in user.roles:
             if not ur.third_party:
                 roles.append(ur)
-            elif ur not in roles:
-                # This is a role assigned in lemur, but not returned by sso during current login
-                removed_roles.append(ur.name)
 
-        if removed_roles:
-            log_service.audit_log("unassign_role", user.username, f"Un-assigning roles {removed_roles}")
         # update any changes to the user
         user_service.update(
             user.id,
@@ -269,7 +263,6 @@ class Login(Resource):
               POST /auth/login HTTP/1.1
               Host: example.com
               Accept: application/json, text/javascript
-              Content-Type: application/json;charset=UTF-8
 
               {
                 "username": "test",

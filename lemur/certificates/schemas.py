@@ -452,7 +452,6 @@ class CertificateExportInputSchema(LemurInputSchema):
 
 
 class CertificateNotificationOutputSchema(LemurOutputSchema):
-    id = fields.Integer()
     description = fields.String()
     issuer = fields.String()
     name = fields.String()

@@ -378,7 +378,6 @@ class CertificatesList(AuthenticatedResource):
               POST /certificates HTTP/1.1
               Host: example.com
               Accept: application/json, text/javascript
-              Content-Type: application/json;charset=UTF-8
 
               {
                   "owner": "secure@example.net",
@@ -530,7 +529,6 @@ class CertificatesUpload(AuthenticatedResource):
               POST /certificates/upload HTTP/1.1
               Host: example.com
               Accept: application/json, text/javascript
-              Content-Type: application/json;charset=UTF-8
 
               {
                  "owner": "joe@example.com",
@@ -799,7 +797,6 @@ class Certificates(AuthenticatedResource):
               PUT /certificates/1 HTTP/1.1
               Host: example.com
               Accept: application/json, text/javascript
-              Content-Type: application/json;charset=UTF-8
 
               {
                  "owner": "jimbob@example.com",
@@ -939,7 +936,6 @@ class Certificates(AuthenticatedResource):
               POST /certificates/1/update/notify HTTP/1.1
               Host: example.com
               Accept: application/json, text/javascript
-              Content-Type: application/json;charset=UTF-8
 
               {
                  "notify": false
@@ -1308,7 +1304,6 @@ class CertificateExport(AuthenticatedResource):
               PUT /certificates/1/export HTTP/1.1
               Host: example.com
               Accept: application/json, text/javascript
-              Content-Type: application/json;charset=UTF-8
 
               {
                 "export": {
@@ -1430,7 +1425,6 @@ class CertificateRevoke(AuthenticatedResource):
               POST /certificates/1/revoke HTTP/1.1
               Host: example.com
               Accept: application/json, text/javascript
-              Content-Type: application/json;charset=UTF-8
 
               {
                 "crlReason": "affiliationChanged",

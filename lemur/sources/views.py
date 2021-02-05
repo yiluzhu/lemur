@@ -106,7 +106,6 @@ class SourcesList(AuthenticatedResource):
               POST /sources HTTP/1.1
               Host: example.com
               Accept: application/json, text/javascript
-              Content-Type: application/json;charset=UTF-8
 
               {
                 "options": [
@@ -238,7 +237,6 @@ class Sources(AuthenticatedResource):
               POST /sources/1 HTTP/1.1
               Host: example.com
               Accept: application/json, text/javascript
-              Content-Type: application/json;charset=UTF-8
 
               {
                 "options": [

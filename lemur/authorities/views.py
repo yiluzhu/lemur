@@ -130,7 +130,6 @@ class AuthoritiesList(AuthenticatedResource):
               POST /authorities HTTP/1.1
               Host: example.com
               Accept: application/json, text/javascript
-              Content-Type: application/json;charset=UTF-8
 
              {
                 "country": "US",
@@ -302,7 +301,6 @@ class Authorities(AuthenticatedResource):
               PUT /authorities/1 HTTP/1.1
               Host: example.com
               Accept: application/json, text/javascript
-              Content-Type: application/json;charset=UTF-8
 
               {
                 "name": "TestAuthority5",

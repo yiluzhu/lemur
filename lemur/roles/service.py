@@ -12,7 +12,6 @@
 from lemur import database
 from lemur.roles.models import Role
 from lemur.users.models import User
-from lemur.logs import service as log_service
 
 
 def update(role_id, name, description, users):
@@ -30,8 +29,6 @@ def update(role_id, name, description, users):
     role.description = description
     role.users = users
     database.update(role)
-
-    log_service.audit_log("update_role", name, f"Role with id {role_id} updated")
     return role
 
 
@@ -47,8 +44,6 @@ def set_third_party(role_id, third_party_status=False):
     role = get(role_id)
     role.third_party = third_party_status
     database.update(role)
-
-    log_service.audit_log("update_role", role.name, f"Updated third_party_status={third_party_status}")
     return role
 
 
@@ -76,7 +71,6 @@ def create(
     if users:
         role.users = users
 
-    log_service.audit_log("create_role", name, "Creating new role")
     return database.create(role)
 
 
@@ -107,10 +101,7 @@ def delete(role_id):
     :param role_id:
     :return:
     """
-
-    role = get(role_id)
-    log_service.audit_log("delete_role", role.name, "Deleting role")
-    return database.delete(role)
+    return database.delete(get(role_id))
 
 
 def render(args):

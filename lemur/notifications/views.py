@@ -126,7 +126,6 @@ class NotificationsList(AuthenticatedResource):
               POST /notifications HTTP/1.1
               Host: example.com
               Accept: application/json, text/javascript
-              Content-Type: application/json;charset=UTF-8
 
               {
                 "description": "a test",
@@ -315,7 +314,6 @@ class Notifications(AuthenticatedResource):
               POST /notifications/1 HTTP/1.1
               Host: example.com
               Accept: application/json, text/javascript
-              Content-Type: application/json;charset=UTF-8
 
 
            **Example response**:

@@ -1,12 +1,9 @@
 version: '3'
 
-volumes:
-  pg_data: { }
-
 services:
   postgres:
-    image: "postgres:13.1-alpine"
-    restart: on-failure
+    image: "postgres:10"
+    restart: always
     volumes:
       - pg_data:/var/lib/postgresql/data
     env_file:
@@ -14,9 +11,7 @@ services:
 
   lemur:
     # image: "netlix-lemur:latest"
-    restart: on-failure
-    build:
-      context: .
+    build: .
     depends_on:
       - postgres
       - redis
@@ -24,9 +19,11 @@ services:
       - lemur-env
       - pgsql-env
     ports:
-      - 87:80
-      - 447:443
+      - 80:80
+      - 443:443
 
   redis:
-    image: "redis:alpine3.12"
-    restart: on-failure
+    image: "redis:alpine"
+
+volumes:
+    pg_data: {}

@@ -224,7 +224,6 @@ class PendingCertificates(AuthenticatedResource):
               PUT /pending certificates/1 HTTP/1.1
               Host: example.com
               Accept: application/json, text/javascript
-              Content-Type: application/json;charset=UTF-8
 
               {
                  "owner": "jimbob@example.com",
@@ -466,7 +465,6 @@ class PendingCertificatesUpload(AuthenticatedResource):
               POST /certificates/1/upload HTTP/1.1
               Host: example.com
               Accept: application/json, text/javascript
-              Content-Type: application/json;charset=UTF-8
 
               {
                  "body": "-----BEGIN CERTIFICATE-----...",
