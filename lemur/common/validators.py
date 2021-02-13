@@ -26,9 +26,12 @@ def sensitive_domain(domain):
     :param domain: domain name (str)
     :return:
     """
-    if SensitiveDomainPermission().can():
-        # User has permission, no need to check anything
-        return
+    try:
+        if SensitiveDomainPermission().can():
+            # User has permission, no need to check anything
+            return
+    except AttributeError as err:
+        current_app.logger.info("Error checking sensitive domain permission: %s", err)
 
     allowlist = current_app.config.get("LEMUR_ALLOWED_DOMAINS", [])
     if allowlist and not any(re.match(pattern, domain) for pattern in allowlist):
