@@ -109,8 +109,8 @@ gulp.task('dev:styles', function () {
     'lemur/static/app/styles/lemur.css'
   ];
 
-  if (argv.customThemeName && argv.customThemeName.length) {
-    fileList.push('lemur/static/app/styles/' + argv.customThemeName.toLowerCase() + '.css');
+  if (argv.customThemePath && argv.customThemePath.length) {
+    fileList.push(argv.customThemePath);
   }
   return gulp.src(fileList)
     .pipe(gulpif(isBootswatchFile, foreach(function (stream, file) {

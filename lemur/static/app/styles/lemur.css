@@ -222,7 +222,6 @@ a {
 .btn-default-dropdown li:hover{background: #3E3F3A;}
 .btn-default-dropdown li a{color: white;}
 .m-t-20{margin-top: 20px;}
-.pfizer-only{display:none}
 @media (max-width: 768px) {
   .navbar-collapse{float: left;width: 100%;}
   .abs{position: absolute;top: -10px;right: 60px;}
