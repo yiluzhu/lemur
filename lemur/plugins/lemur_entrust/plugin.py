@@ -1,3 +1,4 @@
+import time
 import arrow
 import requests
 import json
@@ -357,7 +358,11 @@ class EntrustSourcePlugin(SourcePlugin):
         super(EntrustSourcePlugin, self).__init__(*args, **kwargs)
 
     def get_certificates(self, options, **kwargs):
-        """ Fetch all Entrust certificates """
+        """ Fetch all Entrust certificates
+        Entrust API rate limit：
+            Get request: 60 per 30 seconds
+            Post request: 10 per 30 seconds
+        """
         base_url = current_app.config.get("ENTRUST_URL")
         host = base_url.replace('/enterprise/v2', '')
 
@@ -389,7 +394,7 @@ class EntrustSourcePlugin(SourcePlugin):
                 cert_response = self.session.get(download_url)
                 certificate = json.loads(cert_response.content)
                 # normalize serial
-                serial = str(int(certificate["serialNumber"], 16))
+                serial = str(int(certificate['serialNumber'], 16)) if 'serialNumber' in certificate else ''
                 cert = {
                     "body": certificate["endEntityCert"],
                     "serial": serial,
@@ -404,6 +409,9 @@ class EntrustSourcePlugin(SourcePlugin):
                 break
             else:
                 offset += 1
+
+            time.sleep(0.5)
+
         current_app.logger.info(f"Retrieved {processed_certs} ertificates")
         return certs
 
