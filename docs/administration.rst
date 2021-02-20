@@ -78,13 +78,13 @@ Basic Configuration
             The default connection pool size is 5 for sqlalchemy managed connections.   Depending on the number of Lemur instances,
             please specify per instance connection pool size.  Below is an example to set connection pool size to 10.
 
-        ::
+    ::
 
         SQLALCHEMY_POOL_SIZE = 10
 
 
     .. warning::
-This is an optional setting but important to review and set for optimal database connection usage and for overall database performance.
+        This is an optional setting but important to review and set for optimal database connection usage and for overall database performance.
 
 .. data:: SQLALCHEMY_MAX_OVERFLOW
     :noindex:
@@ -99,7 +99,7 @@ This is an optional setting but important to review and set for optimal database
 
 
     .. note::
-Specifying the `SQLALCHEMY_MAX_OVERFLOW` to 0 will enforce limit to not create connections above specified pool size.
+        Specifying the `SQLALCHEMY_MAX_OVERFLOW` to 0 will enforce limit to not create connections above specified pool size.
 
 
 .. data:: LEMUR_ALLOW_WEEKEND_EXPIRATION
@@ -174,6 +174,7 @@ Specifying the `SQLALCHEMY_MAX_OVERFLOW` to 0 will enforce limit to not create c
 
 .. data:: PUBLIC_CA_MAX_VALIDITY_DAYS
     :noindex:
+
         Use this config to override the limit of 397 days of validity for certificates issued by CA/Browser compliant authorities.
         The authorities with cab_compliant option set to true will use this config. The example below overrides the default validity
         of 397 days and sets it to 365 days.
@@ -185,6 +186,7 @@ Specifying the `SQLALCHEMY_MAX_OVERFLOW` to 0 will enforce limit to not create c
 
 .. data:: DEFAULT_VALIDITY_DAYS
     :noindex:
+
         Use this config to override the default validity of 365 days for certificates offered through Lemur UI. Any CA which
         is not CA/Browser Forum compliant will be using this value as default validity to be displayed on UI. Please
         note that this config is used for cert issuance only through Lemur UI. The example below overrides the default validity
@@ -712,6 +714,33 @@ For more information about how to use social logins, see: `Satellizer <https://g
 
             PING_AUTH_ENDPOINT = "https://<yourpingserver>/oauth2/authorize"
 
+.. data:: PING_USER_MEMBERSHIP_URL
+    :noindex:
+
+        An optional additional endpoint to learn membership details post the user validation.
+
+        ::
+
+            PING_USER_MEMBERSHIP_URL = "https://<yourmembershipendpoint>"
+
+.. data:: PING_USER_MEMBERSHIP_TLS_PROVIDER
+    :noindex:
+
+        A custom TLS session provider plugin name
+
+        ::
+
+            PING_USER_MEMBERSHIP_TLS_PROVIDER = "slug-name"
+
+.. data:: PING_USER_MEMBERSHIP_SERVICE
+    :noindex:
+
+        Membership service name used by PING_USER_MEMBERSHIP_TLS_PROVIDER to create a session
+
+        ::
+
+            PING_USER_MEMBERSHIP_SERVICE = "yourmembershipservice"
+
 .. data:: OAUTH2_SECRET
     :noindex:
 
@@ -877,10 +906,12 @@ Active Directory Certificate Services Plugin
 
 .. data:: ADCS_START
     :noindex:
+
         Used in ADCS-Sourceplugin. Minimum id of the first certificate to be returned. ID is increased by one until ADCS_STOP. Missing cert-IDs are ignored
 
 .. data:: ADCS_STOP
     :noindex:
+
         Used for ADCS-Sourceplugin. Maximum id of the certificates returned. 
         
 
@@ -959,10 +990,16 @@ The following parameters have to be set in the configuration files.
         If there is a config variable ENTRUST_PRODUCT_<upper(authority.name)> take the value as cert product name else default to "STANDARD_SSL". Refer to the API documentation for valid products names.
 
 
-.. data:: ENTRUST_CROSS_SIGNED_RSA
+.. data:: ENTRUST_CROSS_SIGNED_RSA_L1K
     :noindex:
 
-        This is optional. Entrust provides support for cross-signed subCAS. One can set ENTRUST_CROSS_SIGNED_RSA to the respective cross-signed subCA PEM, such as L1K, Lemur will replace the retrieved subCA with ENTRUST_CROSS_SIGNED_RSA.
+        This is optional. Entrust provides support for cross-signed subCAS. One can set ENTRUST_CROSS_SIGNED_RSA_L1K to the respective cross-signed RSA-based subCA PEM and Lemur will replace the retrieved subCA with ENTRUST_CROSS_SIGNED_RSA_L1K.
+
+
+.. data:: ENTRUST_CROSS_SIGNED_ECC_L1F
+    :noindex:
+
+        This is optional. Entrust provides support for cross-signed subCAS. One can set ENTRUST_CROSS_SIGNED_ECC_L1F to the respective cross-signed EC-based subCA PEM and Lemur will replace the retrieved subCA with ENTRUST_CROSS_SIGNED_ECC_L1F.
 
 
 .. data:: ENTRUST_USE_DEFAULT_CLIENT_ID
@@ -1607,7 +1644,7 @@ Slack
 
 
 AWS (Source)
-----
+------------
 
 :Authors:
     Kevin Glisson <kglisson@netflix.com>,
@@ -1620,7 +1657,7 @@ AWS (Source)
 
 
 AWS (Destination)
-----
+-----------------
 
 :Authors:
     Kevin Glisson <kglisson@netflix.com>,
@@ -1633,7 +1670,7 @@ AWS (Destination)
 
 
 AWS (SNS Notification)
------
+----------------------
 
 :Authors:
     Jasmine Schladen <jschladen@netflix.com>
