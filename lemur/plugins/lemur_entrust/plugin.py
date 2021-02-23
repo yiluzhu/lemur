@@ -407,12 +407,14 @@ class EntrustSourcePlugin(SourcePlugin):
                 }
                 certs.append(cert)
                 processed_certs += 1
+
+                time.sleep(0.5)
+
             if data["summary"]["limit"] * offset >= data["summary"]["total"]:
                 break
             else:
                 offset += 1
 
-            time.sleep(0.5)
 
         current_app.logger.info(f"Retrieved {processed_certs} ertificates")
         return certs
