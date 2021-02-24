@@ -408,7 +408,7 @@ class EntrustSourcePlugin(SourcePlugin):
                 certs.append(cert)
                 processed_certs += 1
 
-                time.sleep(0.5)
+                time.sleep(1)
 
             if data["summary"]["limit"] * offset >= data["summary"]["total"]:
                 break
