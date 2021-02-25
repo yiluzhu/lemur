@@ -390,6 +390,7 @@ class EntrustSourcePlugin(SourcePlugin):
             if status_code > 399:
                 raise Exception(f"ENTRUST error: {status_code}\n{data['errors']}")
             for c in data["certificates"]:
+                time.sleep(0.5)
                 download_url = "{0}{1}".format(
                     host, c["uri"]
                 )
@@ -408,13 +409,10 @@ class EntrustSourcePlugin(SourcePlugin):
                 certs.append(cert)
                 processed_certs += 1
 
-                time.sleep(1)
-
             if data["summary"]["limit"] * offset >= data["summary"]["total"]:
                 break
             else:
                 offset += 1
-
 
         current_app.logger.info(f"Retrieved {processed_certs} ertificates")
         return certs
