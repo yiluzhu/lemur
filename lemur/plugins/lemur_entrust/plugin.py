@@ -391,23 +391,26 @@ class EntrustSourcePlugin(SourcePlugin):
                 raise Exception(f"ENTRUST error: {status_code}\n{data['errors']}")
             for c in data["certificates"]:
                 time.sleep(0.5)
-                download_url = "{0}{1}".format(
-                    host, c["uri"]
-                )
-                cert_response = self.session.get(download_url)
-                certificate = json.loads(cert_response.content)
-                # normalize serial
-                serial = str(int(certificate['serialNumber'], 16)) if 'serialNumber' in certificate else ''
-                cert = {
-                    "body": certificate["endEntityCert"],
-                    "serial": serial,
-                    "external_id": str(certificate["trackingId"]),
-                    "csr": certificate["csr"],
-                    "owner": certificate["tracking"]["requesterEmail"],
-                    "description": f"Imported by Lemur; Type: Entrust {certificate['certType']}\nExtended Key Usage: {certificate['eku']}"
-                }
-                certs.append(cert)
-                processed_certs += 1
+                try:
+                    download_url = "{0}{1}".format(
+                        host, c["uri"]
+                    )
+                    cert_response = self.session.get(download_url)
+                    certificate = json.loads(cert_response.content)
+                    # normalize serial
+                    serial = str(int(certificate['serialNumber'], 16)) if 'serialNumber' in certificate else ''
+                    cert = {
+                        "body": certificate["endEntityCert"],
+                        "serial": serial,
+                        "external_id": str(certificate["trackingId"]),
+                        "csr": certificate["csr"],
+                        "owner": certificate["tracking"]["requesterEmail"],
+                        "description": f"Imported by Lemur; Type: Entrust {certificate['certType']}\nExtended Key Usage: {certificate['eku']}"
+                    }
+                    certs.append(cert)
+                    processed_certs += 1
+                except Exception as e:
+                    current_app.logger.error(f"Failed to process certificate: {e}")
 
             if data["summary"]["limit"] * offset >= data["summary"]["total"]:
                 break
