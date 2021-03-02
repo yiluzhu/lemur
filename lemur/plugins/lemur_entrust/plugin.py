@@ -373,7 +373,7 @@ class EntrustSourcePlugin(SourcePlugin):
         processed_certs = 0
         offset = 0
         while True:
-            time.sleep(0.5)
+            time.sleep(1)
             response = self.session.get(get_url,
                  params={
                      "status": "ACTIVE",
@@ -395,7 +395,7 @@ class EntrustSourcePlugin(SourcePlugin):
                     download_url = "{0}{1}".format(
                         host, c["uri"]
                     )
-                    time.sleep(0.5)
+                    time.sleep(3)
                     cert_response = self.session.get(download_url)
                     certificate = json.loads(cert_response.content)
                     # normalize serial
