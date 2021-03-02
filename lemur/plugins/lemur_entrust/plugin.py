@@ -373,6 +373,7 @@ class EntrustSourcePlugin(SourcePlugin):
         processed_certs = 0
         offset = 0
         while True:
+            time.sleep(0.5)
             response = self.session.get(get_url,
                  params={
                      "status": "ACTIVE",
@@ -390,11 +391,11 @@ class EntrustSourcePlugin(SourcePlugin):
             if status_code > 399:
                 raise Exception(f"ENTRUST error: {status_code}\n{data['errors']}")
             for c in data["certificates"]:
-                time.sleep(0.5)
                 try:
                     download_url = "{0}{1}".format(
                         host, c["uri"]
                     )
+                    time.sleep(0.5)
                     cert_response = self.session.get(download_url)
                     certificate = json.loads(cert_response.content)
                     # normalize serial
