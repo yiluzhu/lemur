@@ -30,9 +30,8 @@ def certificate_create(certificate, source):
     data, errors = CertificateUploadInputSchema().load(certificate)
 
     if errors:
-        raise Exception(
-            "Unable to import certificate: {reasons}".format(reasons=errors)
-        )
+        current_app.logger.error(f"Unable to import certificate: {errors}")
+        return
 
     data["creator"] = certificate["creator"]
 
@@ -211,9 +210,9 @@ def sync_certificates(source, user):
         certificate["creator"] = user
 
         if not exists:
-            certificate_create(certificate, source)
-            new += 1
-
+            cert = certificate_create(certificate, source)
+            if cert:
+                new += 1
         else:
             for e in exists:
                 if certificate.get("external_id"):
