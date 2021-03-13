@@ -33,6 +33,7 @@ angular.module('lemur')
   })
 
   .controller('CertificatesViewController', function ($q, $scope, $uibModal, $stateParams, CertificateApi, CertificateService, MomentService, ngTableParams, toaster) {
+    $scope.showFilters = false;
     $scope.filter = $stateParams;
     $scope.expiredText = ['Show Expired', 'Hide Expired'];
     $scope.expiredValue = 0;
@@ -71,6 +72,62 @@ angular.module('lemur')
           });
       }
     });
+
+    $scope.showFilterOptions = function() {
+      $scope.showFilters = !$scope.showFilters;
+    };
+    $scope.toggleFilter = function (filter) {
+      filter.show = !filter.show;
+    };
+    $scope.getCertificateStatus = function () {
+      var def = $q.defer();
+      def.resolve([{'title': 'True', 'id': true}, {'title': 'False', 'id': false}]);
+      return def;
+    };
+    $scope.filters = [
+      {sortable: 'id', show: true, title:'Id', field:'id', type:'Id', filter:{'id': 'text'}},
+      {sortable: 'name', show: true, title:'Name', field:'name', mutedField:'owner', filter: { 'name': 'text' } },
+      {sortable: 'notify', show: true, title:'Notify', field:'notify', type:'boolean', filter: { 'notify': 'select' }, filterData:$scope.getCertificateStatus()},
+      {sortable: 'notification', show: true, title:'Notification', field:'notify', type:'Notify'},
+      {sortable: 'issuer', show: true, title:'Issuer', field:'issuer', filter:{ 'issuer': 'text' }},
+      {sortable: 'cn', show: true, title:'Common Name', field:'cn', filter: { 'cn': 'text'}},
+      {sortable: 'serial', show: false, title:'Serial', field:'serial', filter: { 'serial': 'text'}},
+      {sortable: 'owner', show: false, title:'Owner', field:'owner', filter: { 'owner': 'text'}},
+      {sortable: 'notBefore', show: true, title:'Not Before', field:'notBefore', type:'Date', filter: { 'Not Before From': 'date', 'Not Before To': 'date'}},
+      {sortable: 'notAfter', show: true, title:'Not After', field:'notAfter', type:'Date', filter: { 'Not After From': 'date', 'Not After To': 'date'}},
+      {sortable: 'san', show: false, title:'SAN', type:'SAN'},
+      {sortable: 'bits', show: false, title:'Key Length', field:'bits'},
+      {sortable: 'keyType', show: false, title:'Key type', field:'keyType', filter: { 'keyType': 'text'}},
+      {sortable: 'signingAlgorithm', show: false, title:'Signing Algorithm', field:'signingAlgorithm', filter: { 'signingAlgorithm': 'text'}},
+      {sortable: 'status', show: false, title:'Validity', field:'status', filter: { 'status': 'text'}},
+    ];
+
+    $scope.mapSan = function(data) {
+      if (data.extensions &&
+        data.extensions.subAltNames &&
+        data.extensions.subAltNames.names &&
+        data.extensions.subAltNames.names.length > 0) {
+          return data.extensions.subAltNames.names.map(name => name.value).join(' , ');
+      }
+      return '';
+    };
+
+    $scope.mapNotify = function(data) {
+      if (data.notifications) {
+        const values = [];
+        data.notifications.map(notification =>
+          notification.options.find(option => option.name === 'recipients').value
+        ).forEach((item) => {
+          if (values.indexOf(item) === -1){
+             values.push(item);
+          }
+        });
+        if (values.length > 0) {
+          return values.join(' , ');
+        }
+      }
+      return '';
+    };
 
     $scope.showExpired = function (days = 0) {
       if ($scope.expiresInDays === days) {
@@ -197,11 +254,6 @@ angular.module('lemur')
           });
           certificate.notify = false;
         });
-    };
-    $scope.getCertificateStatus = function () {
-      var def = $q.defer();
-      def.resolve([{'title': 'True', 'id': true}, {'title': 'False', 'id': false}]);
-      return def;
     };
 
     $scope.show = {title: 'Current User', value: 'currentUser'};

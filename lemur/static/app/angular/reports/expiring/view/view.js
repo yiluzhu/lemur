@@ -26,18 +26,47 @@ angular.module('lemur')
        {sortable: 'id', show: false, title:'Id', field:'id'},
        {sortable: 'name', show: true, title:'Name', field:'name'},
        {sortable: 'cn', show: false, title:'Common Name', field:'cn'},
-       {sortable: 'notify', show: false, title:'Notify', field:'notify', type:'boolean'},
+       {sortable: 'issuer', show: true, title:'Issuer', field:'issuer'},
+       {sortable: 'notify', show: true, title:'Notify', field:'notify', type:'boolean'},
+       {show: true, title:'Notification', field:'notification', type:'Notify'},
        {sortable: 'serial', show: false, title:'Serial', field:'serial'},
        {sortable: 'creator', show: true, title:'Creator', field:'creator'},
        {sortable: 'owner', show: true, title:'Owner', field:'owner'},
        {sortable: 'notBefore', show: false, title:'Valid From', field:'notBefore', type:'Date'},
        {sortable: 'notAfter', show: true, title:'Valid To', field:'notAfter', type:'Date'},
-       {sortable: 'san', show: true, title:'SAN', field:'san', type:'boolean'},
+       {sortable: 'san', show: true, field: 'san', title:'SAN', type:'SAN'},
        {sortable: 'bits', show: true, title:'Key Length', field:'bits'},
        {sortable: 'keyType', show: true, title:'Key type', field:'keyType'},
        {sortable: 'signingAlgorithm', show: true, title:'Signing Algorithm', field:'signingAlgorithm'},
        {sortable: 'status', show: true, title:'Validity', field:'status'},
      ];
+
+     $scope.mapSan = function(data) {
+       if (data.extensions &&
+         data.extensions.subAltNames &&
+         data.extensions.subAltNames.names &&
+         data.extensions.subAltNames.names.length > 0) {
+           return data.extensions.subAltNames.names.map(name => name.value).join(' , ');
+       }
+       return '';
+     };
+
+     $scope.mapNotify = function(data) {
+       if (data.notifications) {
+         const values = [];
+         data.notifications.map(notification =>
+           notification.options.find(option => option.name === 'recipients').value
+         ).forEach((item) => {
+           if (values.indexOf(item) === -1){
+              values.push(item);
+           }
+         });
+         if (values.length > 0) {
+           return values.join(' , ');
+         }
+       }
+       return '';
+     };
 
      $scope.filterData = function (days, from, to) {
        $scope.expiresInDays = days;
@@ -110,7 +139,17 @@ angular.module('lemur')
              $scope.filters
                .filter(filter=>filter.show)
                .forEach((item) => {
-                 csvData[item.field] = entry[item.field];
+                 if (item.type === 'Date') {
+                   csvData[item.field] = $scope.momentService.showInEST(entry[item.field]);
+                 } else if (item.type === 'SAN') {
+                   csvData[item.field] = $scope.mapSan(entry);
+                 } else if (item.type === 'Notify') {
+                   csvData[item.field] = $scope.mapNotify(entry);
+                 } else if (item.field === 'serial') {
+                   csvData[item.field] = "'" + entry[item.field].toString();
+                 } else {
+                   csvData[item.field] = entry[item.field];
+                 }
                });
              return csvData;
            }));

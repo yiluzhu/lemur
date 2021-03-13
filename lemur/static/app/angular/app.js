@@ -91,6 +91,12 @@
       }
       return 'Unknown';
     };
+    this.showInEST = function (date) {
+      var dt = new Date(date);
+      var myDatetimeFormat= 'YYYY-MM-DDTHH:mm:ssZ';
+
+      return moment(dt).utcOffset(-5).format(myDatetimeFormat);
+    };
   });
 
   lemur.controller('datePickerController', function ($scope, $timeout){

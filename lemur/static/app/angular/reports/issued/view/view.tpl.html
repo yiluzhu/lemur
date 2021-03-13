@@ -77,7 +77,19 @@
                           </span>
                         </div>
                         <div ng-switch-when="Date" >
-                          <span title="{{ certificate[filter.field] }}">{{ momentService.createMoment(certificate[filter.field]) }}</span>
+                          <span title="{{ certificate[filter.field] }}">{{ momentService.showInEST(certificate[filter.field]) }}</span>
+                        </div>
+                        <div ng-switch-when="SAN" >
+                          <span >
+                            <i class="glyphicon glyphicon-remove" ng-if="!mapSan(certificate)"></i>
+                            {{ mapSan(certificate) }}
+                          </span>
+                        </div>
+                        <div ng-switch-when="Notify" >
+                          <span >
+                            <i class="glyphicon glyphicon-remove" ng-if="!mapNotify(certificate)"></i>
+                            {{ mapNotify(certificate) }}
+                          </span>
                         </div>
                         <div ng-switch-default>
                           {{ certificate[filter.field] }}

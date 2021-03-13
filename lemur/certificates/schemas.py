@@ -376,6 +376,8 @@ class CertificateShortOutputSchema(LemurOutputSchema):
     bits = fields.Integer()
     signing_algorithm = fields.String()
     status = fields.String()
+    extensions = fields.Nested(ExtensionSchema)
+    notifications = fields.Nested(NotificationNestedOutputSchema, many=True)
 
 
 
