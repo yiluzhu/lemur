@@ -94,9 +94,23 @@
     this.showInEST = function (date) {
       var dt = new Date(date);
       var myDatetimeFormat= 'YYYY-MM-DDTHH:mm:ssZ';
-
-      return moment(dt).utcOffset(-5).format(myDatetimeFormat);
+      var offset = this.getTimeOffset();
+      return moment(dt).utcOffset(offset).format(myDatetimeFormat);
     };
+    this.getTimeOffset = function() {
+      var arr = [];
+      for (var i = 0; i < 360; i++) {
+         var d = new Date();
+         d.setDate(i);
+         arr.push(d.getTimezoneOffset());
+      }
+
+      if (Math.min.apply(null, arr) === new Date().getTimezoneOffset()) {
+        return -5;
+      }
+      return -4;
+    };
+
   });
 
   lemur.controller('datePickerController', function ($scope, $timeout){
