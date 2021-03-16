@@ -106,9 +106,9 @@
       }
 
       if (Math.min.apply(null, arr) === new Date().getTimezoneOffset()) {
-        return -5;
+        return -4;
       }
-      return -4;
+      return -5;
     };
 
   });
