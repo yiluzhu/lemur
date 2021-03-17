@@ -147,7 +147,7 @@ angular.module('lemur')
                  } else if (item.type === 'Notify') {
                    csvData[item.field] = $scope.mapNotify(entry);
                  } else if (item.field === 'serial') {
-                   csvData[item.field] = "'" + entry[item.field].toString();
+                   csvData[item.field] = '\'' + entry[item.field].toString();
                  } else {
                    csvData[item.field] = entry[item.field];
                  }

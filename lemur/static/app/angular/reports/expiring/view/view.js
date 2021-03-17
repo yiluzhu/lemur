@@ -95,6 +95,7 @@ angular.module('lemur')
      $scope.filterData = function (days, from, to) {
        $scope.expiresInDays = days;
        $scope.data=[];
+       let showExpired = false;
        if (days) {
          const now = new Date();
          from = now.toISOString().substr(0,10);
@@ -104,8 +105,10 @@ angular.module('lemur')
          } else {
            to = from;
            from = now.toISOString().substr(0,10);
+           showExpired = true;
          }
          if ($scope.includeExprired) {
+           showExpired = true;
            const beforeMonth = new Date();
            beforeMonth.setDate(beforeMonth.getDate() - 30);
            from = beforeMonth.toISOString().substr(0,10);
@@ -113,6 +116,7 @@ angular.module('lemur')
        } else {
          from = from?from.toISOString().substr(0,10):'*';
          to = to?to.toISOString().substr(0,10):'*';
+         showExpired = true;
        }
        const notAfterRange = `${from}to${to}`;
        LemurRestangular.all('certificates').customGET('stats', {metric: 'issuer', notAfterRange})
@@ -146,6 +150,9 @@ angular.module('lemur')
            getData: function ($defer, params) {
              $scope.params = params.url();
              $scope.params['filter[notAfterRange]'] = notAfterRange;
+             if (showExpired) {
+               $scope.params.showExpired = 1;
+             }
              CertificateApi.getList($scope.params)
                .then(function (data) {
                  params.total(data.total);
@@ -180,7 +187,7 @@ angular.module('lemur')
                  } else if (item.type === 'Notify') {
                    csvData[item.field] = $scope.mapNotify(entry);
                  } else if (item.field === 'serial') {
-                   csvData[item.field] = "'" + entry[item.field].toString();
+                   csvData[item.field] = '\'' + entry[item.field].toString();
                  } else {
                    csvData[item.field] = entry[item.field];
                  }
