@@ -372,6 +372,7 @@ class EntrustSourcePlugin(SourcePlugin):
         certs = []
         processed_certs = 0
         offset = 0
+        offset_cnt = 0
         while True:
             time.sleep(1)
             response = self.session.get(get_url,
@@ -400,23 +401,24 @@ class EntrustSourcePlugin(SourcePlugin):
                     certificate = json.loads(cert_response.content)
                     # normalize serial
                     serial = str(int(certificate['serialNumber'], 16)) if 'serialNumber' in certificate else ''
+                    eku = certificate['eku'] if 'eku' in certificate else ''
                     cert = {
                         "body": certificate["endEntityCert"],
                         "serial": serial,
                         "external_id": str(certificate["trackingId"]),
-                        "csr": certificate["csr"],
                         "owner": certificate["tracking"]["requesterEmail"],
-                        "description": f"Imported by Lemur; Type: Entrust {certificate['certType']}\nExtended Key Usage: {certificate['eku']}"
+                        "description": f"Imported by Lemur; Type: Entrust {certificate['certType']}\nExtended Key Usage: {eku}"
                     }
                     certs.append(cert)
                     processed_certs += 1
                 except Exception as e:
                     current_app.logger.error(f"Failed to process certificate: {e}")
 
-            if data["summary"]["limit"] * offset >= data["summary"]["total"]:
+            if data["summary"]["limit"] * offset_cnt >= data["summary"]["total"]:
                 break
             else:
-                offset += 1
+                offset += data["summary"]["limit"]
+                offset_cnt += 1
 
         current_app.logger.info(f"Retrieved {processed_certs} ertificates")
         return certs
