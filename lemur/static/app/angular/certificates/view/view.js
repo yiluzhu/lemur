@@ -100,6 +100,7 @@ angular.module('lemur')
       {sortable: 'keyType', show: false, title:'Key type', field:'keyType', filter: { 'keyType': 'text'}},
       {sortable: 'signingAlgorithm', show: false, title:'Signing Algorithm', field:'signingAlgorithm', filter: { 'signingAlgorithm': 'text'}},
       {sortable: 'status', show: false, title:'Validity', field:'status', filter: { 'status': 'text'}},
+      {show: true, title:'Actions', type:'Actions'},
     ];
 
     $scope.mapSan = function(data) {

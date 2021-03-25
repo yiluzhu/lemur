@@ -82,71 +82,71 @@
         <table ng-table="certificateTable" class="table" show-filter="showFilter" template-pagination="angular/pager.html" ng-table-dynamic="demo.tableParams with filters">
           <tbody>
           <tr ng-class="{'even-row': $even,'bg-warning':markWarning(certificate.notAfter), 'bg-danger':markDanger(certificate.notAfter) }" ng-repeat-start="certificate in $data track by $index">
-            <td
-              ng-repeat="filter in $columns">
-              <span ng-switch="filter.type">
-                <div ng-switch-when="Id" >
-                  <ng-container ng-if="!bulkActionEnabled">
-                    {{ certificate[filter.field] }}
-                  </ng-container>
-                  <ng-container ng-if="bulkActionEnabled">
-                    <input type="checkbox"
-                    name="multiList[]"
-                    value="{{ certificate.id }}"
-                    ng-checked="multiList.indexOf(certificate.id) > -1"
-                    ng-click="toggleMultiListSelection(certificate)"/>
-                  </ng-container>
-                </div>
-                <div ng-switch-when="Date" >
-                  <span title="{{ certificate[filter.field] }}">{{ momentService.showInEST(certificate[filter.field]) }}</span>
-                </div>
-                <div ng-switch-when="SAN" >
-                  <span >
-                    <i class="glyphicon glyphicon-remove" ng-if="!mapSan(certificate)"></i>
-                    {{ mapSan(certificate) }}
-                  </span>
-                </div>
-                <div ng-switch-when="Notify" >
-                  <span >
-                    <i class="glyphicon glyphicon-remove" ng-if="!mapNotify(certificate)"></i>
-                    {{ mapNotify(certificate) }}
-                  </span>
-                </div>
-                <div ng-switch-when="boolean" >
-                  <span >
-                    <form>
-                      <switch ng-change="updateNotify(certificate)" id="status" name="status"
-                              ng-model="certificate.notify" class="green small"></switch>
-                    </form>
-                  </span>
-                </div>
-                <div ng-switch-default>
-                  {{ certificate[filter.field] }}
-                  <span ng-if="filter.mutedField" class="text-muted">{{ certificate[filter.mutedField] }}</span>
-                </div>
-              </span>
-            </td>
-            <td data-title="''" style="text-align: center; vertical-align: middle;">
-                <div class="btn-group pull-right" role="group" aria-label="...">
-                  <a class="btn btn-sm btn-primary" ui-sref="certificate({fixedName: certificate.name})">Permalink</a>
-                  <button ng-model="certificate.toggle" class="btn btn-sm btn-info" uib-btn-checkbox btn-checkbox-true="1"
-                            btn-checkbox-false="0">More
-                  </button>
-                  <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Action
-                      <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                      <li><a href ng-click="edit(certificate.id)">Edit</a></li>
-                      <li><a href ng-click="migrate(certificate.id)">Migrate</a></li>
-                      <li><a href ng-click="clone(certificate.id)">Clone</a></li>
-                      <li><a href ng-click="export(certificate.id)">Export</a></li>
-                      <li><a href ng-click="revoke(certificate)">Revoke</a></li>
-                    </ul>
+              <td
+                ng-repeat="filter in $columns | filter:$show:true">
+                <span ng-switch="filter.type">
+                  <div ng-switch-when="Id" >
+                    <ng-container ng-if="!bulkActionEnabled">
+                      {{ certificate[filter.field] }}
+                    </ng-container>
+                    <ng-container ng-if="bulkActionEnabled">
+                      <input type="checkbox"
+                      name="multiList[]"
+                      value="{{ certificate.id }}"
+                      ng-checked="multiList.indexOf(certificate.id) > -1"
+                      ng-click="toggleMultiListSelection(certificate)"/>
+                    </ng-container>
                   </div>
-                </div>
-            </td>
+                  <div ng-switch-when="Date" >
+                    <span title="{{ certificate[filter.field] }}">{{ momentService.showInEST(certificate[filter.field]) }}</span>
+                  </div>
+                  <div ng-switch-when="SAN" >
+                    <span >
+                      <i class="glyphicon glyphicon-remove" ng-if="!mapSan(certificate)"></i>
+                      {{ mapSan(certificate) }}
+                    </span>
+                  </div>
+                  <div ng-switch-when="Notify" >
+                    <span >
+                      <i class="glyphicon glyphicon-remove" ng-if="!mapNotify(certificate)"></i>
+                      {{ mapNotify(certificate) }}
+                    </span>
+                  </div>
+                  <div ng-switch-when="boolean" >
+                    <span >
+                      <form>
+                        <switch ng-change="updateNotify(certificate)" id="status" name="status"
+                                ng-model="certificate.notify" class="green small"></switch>
+                      </form>
+                    </span>
+                  </div>
+                  <div ng-switch-when="Actions" >
+                    <div class="btn-group pull-right" role="group" aria-label="...">
+                      <a class="btn btn-sm btn-primary" ui-sref="certificate({fixedName: certificate.name})">Permalink</a>
+                      <button ng-model="certificate.toggle" class="btn btn-sm btn-info" uib-btn-checkbox btn-checkbox-true="1"
+                                btn-checkbox-false="0">More
+                      </button>
+                      <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Action
+                          <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a href ng-click="edit(certificate.id)">Edit</a></li>
+                          <li><a href ng-click="migrate(certificate.id)">Migrate</a></li>
+                          <li><a href ng-click="clone(certificate.id)">Clone</a></li>
+                          <li><a href ng-click="export(certificate.id)">Export</a></li>
+                          <li><a href ng-click="revoke(certificate)">Revoke</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div ng-switch-default>
+                    {{ certificate[filter.field] }}
+                    <span ng-if="filter.mutedField" class="text-muted">{{ certificate[filter.mutedField] }}</span>
+                  </div>
+                </span>
+              </td>
           </tr>
           <tr class="warning" ng-if="certificate.toggle" ng-controller="CertificateInfoController" ng-init="fetchFullCertificate(certificate.id)" ng-repeat-end>
             <td colspan="12">
