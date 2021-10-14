@@ -16,8 +16,15 @@
           </div>
           <div class="btn-group">
             <div class="radioBtn">
-              <button ng-repeat="days in daysFilters" ng-click="filterData(days.count)" class="btn btn-info {{expiresInDays!==days.count?'notActive':''}}">{{days.label}}</button>
-
+              <button ng-click="toggleInclueExpired()" class="btn btn-info {{true!==includeExprired?'notActive':''}}">
+                Include Expired
+              </button>
+              <button ng-click="toggleIsExpired()" class="btn btn-info {{true===!includeExprired&&isExpriredOnly?'':'notActive'}}">
+                Expired Only
+              </button>
+              <ng-container ng-repeat="days in daysFilters" >
+                <button ng-if="days.isExprired === isExpriredOnly" ng-click="filterData(days.count)" class="btn btn-info {{expiresInDays!==days.count?'notActive':''}}">{{days.label}}</button>
+              </ng-container>
               <button ng-click="filterData(0, fromDate, toDate)" class="btn btn-info {{0!==expiresInDays?'notActive':''}}">
                 Custom
               </button>
@@ -66,7 +73,7 @@
             <div class="table-responsive">
               <table ng-table="certificateTable" ng-table-dynamic="demo.tableParams with filters"  class="table" template-pagination="angular/pager.html">
                 <tbody ng-if="$data.length > 0" >
-                  <tr ng-class="{'even-row': $even }" ng-repeat="certificate in $data">
+                  <tr ng-class="{'even-row': $even,'bg-warning':markWarning(certificate.notAfter), 'bg-danger':markDanger(certificate.notAfter) }" ng-repeat="certificate in $data">
                     <td
                       ng-repeat="filter in $columns">
                       <span ng-switch="filter.type">

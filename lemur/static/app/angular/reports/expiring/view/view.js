@@ -12,15 +12,23 @@ angular.module('lemur')
 
    .controller('ExpiringReportsViewController', function ($q, $scope, LemurRestangular, ngTableParams, CertificateApi, MomentService) {
      $scope.showFilters = false;
+     $scope.isExpriredOnly = false;
+     $scope.includeExprired = false;
      $scope.params = {};
      $scope.momentService = MomentService;
      $scope.daysFilters = [
-       {count: 1, label:'In 1 Day'},
-       {count: 3, label:'In 3 Days'},
-       {count: 7, label:'In 7 Days'},
-       {count: 30, label:'In next Month'},
-       {count: 60, label:'In 2 Months'},
-       {count: 90, label:'In 3 Months'}
+       {count: 1, label:'In 1 Day', isExprired: false},
+       {count: 3, label:'In 3 Days', isExprired: false},
+       {count: 7, label:'In 7 Days', isExprired: false},
+       {count: 30, label:'In next Month', isExprired: false},
+       {count: 60, label:'In 2 Months', isExprired: false},
+       {count: 90, label:'In 3 Months', isExprired: false},
+       {count: -1, label:'Last Day', isExprired: true},
+       {count: -3, label:'Wihtin 3 Days', isExprired: true},
+       {count: -7, label:'Wihtin 7 Days', isExprired: true},
+       {count: -30, label:'Wihtin Last Month', isExprired: true},
+       {count: -60, label:'Wihtin 2 Months', isExprired: true},
+       {count: -90, label:'Wihtin 3 Months', isExprired: true}
      ];
      $scope.filters = [
        {sortable: 'id', show: false, title:'Id', field:'id'},
@@ -40,6 +48,22 @@ angular.module('lemur')
        {sortable: 'signingAlgorithm', show: true, title:'Signing Algorithm', field:'signingAlgorithm'},
        {sortable: 'status', show: true, title:'Validity', field:'status'},
      ];
+
+     $scope.toggleIsExpired = function() {
+       $scope.includeExprired = false;
+       $scope.isExpriredOnly = !$scope.isExpriredOnly;
+       $scope.expiresInDays = - $scope.expiresInDays;
+       $scope.filterData($scope.expiresInDays);
+     };
+
+     $scope.toggleInclueExpired = function() {
+       $scope.includeExprired = !$scope.includeExprired;
+       if ($scope.isExpriredOnly) {
+         $scope.isExpriredOnly = false;
+         $scope.expiresInDays = - $scope.expiresInDays;
+       }
+       $scope.filterData($scope.expiresInDays);
+     };
 
      $scope.mapSan = function(data) {
        if (data.extensions &&
@@ -75,7 +99,17 @@ angular.module('lemur')
          const now = new Date();
          from = now.toISOString().substr(0,10);
          now.setDate(now.getDate() + $scope.expiresInDays);
-         to = now.toISOString().substr(0,10);
+         if (days > 0) {
+           to = now.toISOString().substr(0,10);
+         } else {
+           to = from;
+           from = now.toISOString().substr(0,10);
+         }
+         if ($scope.includeExprired) {
+           const beforeMonth = new Date();
+           beforeMonth.setDate(beforeMonth.getDate() - 30);
+           from = beforeMonth.toISOString().substr(0,10);
+         }
        } else {
          from = from?from.toISOString().substr(0,10):'*';
          to = to?to.toISOString().substr(0,10):'*';
@@ -155,5 +189,14 @@ angular.module('lemur')
            }));
          });
        return deferred.promise;
+     };
+     $scope.markWarning = function (date) {
+       var now = new Date() ;
+       now.setDate(now.getDate() + 7);
+       return !$scope.markDanger() && now >= Date.parse(date);
+     };
+     $scope.markDanger = function (date) {
+       var now = new Date() ;
+       return now >= Date.parse(date);
      };
    });
